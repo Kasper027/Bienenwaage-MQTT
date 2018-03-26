@@ -38,9 +38,9 @@ const char* broker = "swarm.hiveeyes.org";
 const char* topic = "hiveeyes/kasper/Garten/Stand1/data/Temperatur";
 const char* topic1 = "hiveeyes/kasper/Garten/Stand1/data/DS18";
 const char* topic2 = "hiveeyes/kasper/Garten/Stand1/data/Gewicht";
-const char* clientID = "kasper027";
-const char* username = "thiele.julian1@gmail.com";
-const char* passwort = "jarAnAfyekKeun";
+const char* clientID = "kasper";
+const char* username = "xxxxx";
+const char* passwort = "xxxx";
 
 String temp_str;
 char temp[50];
