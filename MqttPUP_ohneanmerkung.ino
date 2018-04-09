@@ -1,4 +1,4 @@
-UNGÜLTIG
+UNGÜLTIG 
 
 
 #define TINY_GSM_MODEM_SIM800
