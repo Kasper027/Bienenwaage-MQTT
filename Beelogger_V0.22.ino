@@ -68,7 +68,7 @@ int Kalib_Bitwert = 0;   // Hier muss der Wert aus der Kalibrierung eingetragen 
 // Konfiguration RTC & Sleep-Mode
 //----------------------------------------------------------------
 
-byte WeckIntervallMinuten = 1;        
+byte WeckIntervallMinuten = 2;        
 byte WeckIntervallStunden = 0; 
 
 #include <Sodaq_DS3231.h>
@@ -102,9 +102,9 @@ const char* top  = "hiveeyes/kasper/Garten/Stand1/data/";
 const char* topic = "Temperatur";
 const char* topic1 = "DS18";
 const char* topic2 = "Gewicht";
-const char* clientID = "xxx";
-const char* username = "xxxxx";
-const char* passwort = "xxxxx";
+const char* clientID = "kasper";
+const char* username = "thiele.julian1@gmail.com";
+const char* passwort = "jarAnAfyekKeun";
 
 String temp_str;
 char temp[50];
@@ -172,7 +172,7 @@ void setup() {
 void loop() {
   Sensor_DS18B20();
   Sensor_DHT();
-  Sensor_Gewicht();
+  //Sensor_Gewicht();
   Senden_GSM();
   Alarm_konfigurieren();
   SleepNow();
@@ -186,6 +186,7 @@ void Sensor_DS18B20(){
   digitalWrite(22, LOW);
   delay(1500);
   Serial.begin(115200);
+  Serial.println("Void Sensor_DS18");
   sensors.begin();
   sensors.setResolution(insideThermometer, 12);
 
@@ -200,6 +201,7 @@ void Sensor_DS18B20(){
 // Funktion Sensor_DHT
 //----------------------------------------------------------------
 void Sensor_DHT(){
+  Serial.println("Void Sensor_DHT");
   delay(500);
   dht.begin();
   tempdht = dht.readTemperature();
@@ -212,8 +214,8 @@ void Sensor_DHT(){
 // Funktion Sensor_Gewicht
 //----------------------------------------------------------------
 void Sensor_Gewicht(){
+  Serial.println("Void Sensor_Gewicht");
   delay(500);
-  Serial.println(Taragewicht);
   scale.set_offset(Taragewicht);
   scale.set_scale(Skalierung);
 
@@ -253,13 +255,14 @@ void Sensor_Gewicht(){
 //----------------------------------------------------------------
 
 //Wird das hier überhaupt benötigt? Für den ersten Test drinn lassen. Ansonsten muss dieses raus.
+/*
 boolean mqttConnect() {
   if (!mqtt.connect(clientID, username, passwort)) {
     return false;
   }
   return mqtt.connected();
 }
-
+*/
 //----------------------------------------------------------------
 // Funktion GSM Verbindung aufbauen    
 //----------------------------------------------------------------
@@ -267,7 +270,7 @@ void setup_gsm() {
   Serial.println("Void setup_gsm gestartet");
   Serial1.begin(9600);
   delay(3000);
-  modem.restart();
+  //modem.restart();
   Serial.println("Modem Restart");
   String modemInfo = modem.getModemInfo();
   if (!modem.waitForNetwork()) {
@@ -307,13 +310,13 @@ void Senden_GSM(){
 	setup_gsm();
   Serial.println("MQTT.setServer");
 	mqtt.setServer(broker, 1883);
-	//mqtt.setCallback(mqttCallback);   //kann beim Entfernen der unterern Ecke mit raus
+	mqtt.setCallback(mqttCallback);   //kann beim Entfernen der unterern Ecke mit raus
 	if (!mqtt.connected()) {
       Serial.println("Void reconnect Aufgerufen");
      while (!mqtt.connected()) {
         if (mqtt.connect(clientID, username, passwort)) {
-          return mqtt.connected();
           Serial.println("mqtt.connect ist ok");
+          //return mqtt.connected();
         } else {
           Serial.print("failed, rc=");
           Serial.print(mqtt.state());
@@ -322,19 +325,24 @@ void Senden_GSM(){
         }
       }
     }
-
+    delay(500);
 	  temp_str = String(tempdht);
     temp_str.toCharArray(temp, temp_str.length() + 1); 
+    Serial.println(topic);
     mqtt.publish(strcat(top,topic), temp);
+    Serial.println("erster Topic");
 
+    /*delay(500);
     temp1_str = String(tempc);
     temp1_str.toCharArray(temp1, temp1_str.length() + 1); 
     mqtt.publish(strcat(top,topic1), temp1);
 
+    delay(500);
     temp2_str = String(Gewicht);
     temp2_str.toCharArray(temp2, temp2_str.length() + 1); 
     mqtt.publish(strcat(top,topic2), temp2);
-	  Serial.println("MQTT gesendet");
+    delay(500);
+    */
 	  delay(500);
 
 
@@ -348,7 +356,7 @@ void Senden_GSM(){
 // Funktion für Eingehende Nachrichten vom MQTT Broker  --> Kann eigentlich raus
 //----------------------------------------------------------------
 
-/*
+
 void mqttCallback(char* topic, byte* payload, unsigned int lenght) {
   Serial.print("Message arrived [");
   Serial.print(topic);
@@ -356,7 +364,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int lenght) {
   Serial.write(payload, lenght);
   Serial.println();
 }
-*/
+
 //----------------------------------------------------------------
 
 //----------------------------------------------------------------
