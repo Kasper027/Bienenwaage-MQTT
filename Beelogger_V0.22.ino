@@ -102,9 +102,9 @@ const char* top  = "hiveeyes/kasper/Garten/Stand1/data/";
 const char* topic = "Temperatur";
 const char* topic1 = "DS18";
 const char* topic2 = "Gewicht";
-const char* clientID = "kasper";
-const char* username = "thiele.julian1@gmail.com";
-const char* passwort = "jarAnAfyekKeun";
+const char* clientID = "xxx";
+const char* username = "xxx";
+const char* passwort = "xxx";
 
 String temp_str;
 char temp[50];
